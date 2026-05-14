@@ -5,6 +5,7 @@ import com.caio.api.authcrud.dto.UserResponse;
 import com.caio.api.authcrud.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping
-    public UserResponse create(@RequestBody UserRequest request) {
+    public UserResponse create(@Valid @RequestBody UserRequest request) {
         return service.create(request);
     }
 
