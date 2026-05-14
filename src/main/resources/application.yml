@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: auth-crud-api
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/api_db
+    username: api_user
+    password: api_pass
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
