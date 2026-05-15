@@ -8,6 +8,6 @@ public interface AuthService {
     
     void register(UserRequest request);
 
-    AuthResponse Login(LoginRequest request);
+    AuthResponse login(LoginRequest request);
     
 }
