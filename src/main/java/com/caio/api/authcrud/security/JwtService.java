@@ -1,5 +1,6 @@
 package com.caio.api.authcrud.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+
+import javax.crypto.SecretKey;
 
 @Service
 public class JwtService {
@@ -23,11 +26,12 @@ public class JwtService {
     }
 
     public String extractEmail(String token) {
-        return Jwts.parserBuilder()
-            .setSigningKey(key)
+        Claims claims = Jwts.parser()
+            .verifyWith((SecretKey) key)
             .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
+            .parseSignedClaims(token)
+            .getPayload();
+
+        return claims.getSubject();
     }
 }
