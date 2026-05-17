@@ -1,6 +1,5 @@
 package com.caio.api.authcrud.service.impl;
 
-import com.caio.api.authcrud.entity.User;
 import com.caio.api.authcrud.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.*;
