@@ -3,6 +3,8 @@ package com.caio.api.authcrud.service.impl;
 import com.caio.api.authcrud.dto.UserRequest;
 import com.caio.api.authcrud.dto.auth.AuthResponse;
 import com.caio.api.authcrud.dto.auth.LoginRequest;
+import com.caio.api.authcrud.dto.AuthResponseDTO;
+import com.caio.api.authcrud.dto.LoginRequestDTO;
 import com.caio.api.authcrud.entity.User;
 import com.caio.api.authcrud.repository.UserRepository;
 import com.caio.api.authcrud.security.JwtService;
@@ -10,6 +12,8 @@ import com.caio.api.authcrud.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public void register(UserRequest request) {
@@ -31,17 +36,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponseDTO login(LoginRequestDTO request) {
 
-        User user = repository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new RuntimeException("User not found!"));
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.email(),
+                request.password()
+            )
+        );
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid Credentials!");
-        }
+        String token = jwtService.generateToken(request.email());
 
-        String token = jwtService.generateToken(user.getEmail());
-
-        return new AuthResponse(token);
+        return new AuthResponseDTO(token);
     }
 }
