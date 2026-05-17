@@ -1,10 +1,12 @@
 package com.caio.api.authcrud.controller;
 
 import com.caio.api.authcrud.dto.UserRequest;
-import com.caio.api.authcrud.dto.auth.AuthResponse;
-import com.caio.api.authcrud.dto.auth.LoginRequest;
+import com.caio.api.authcrud.dto.AuthResponseDTO;
+import com.caio.api.authcrud.dto.LoginRequestDTO;
 import com.caio.api.authcrud.service.AuthService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
-        return service.login(request);
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(service.login(request));
     }
 }
