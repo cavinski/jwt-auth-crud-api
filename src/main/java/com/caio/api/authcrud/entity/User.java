@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 import java.util.List;
+import jakarta.persistence.OneToMany;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -23,6 +24,9 @@ public class User implements UserDetails{
     private String email;
 
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
