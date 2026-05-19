@@ -1,15 +1,25 @@
 package com.caio.api.authcrud.controller;
 
+import com.caio.api.authcrud.dto.*;
+import com.caio.api.authcrud.service.TaskService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.Authentication;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
+@RequiredArgsConstructor
 public class TaskController {
+
+    private final TaskService taskService;
     
-    @GetMapping("/me")
-    public Map<String,String> me(Authentication authentication) {
-        return Map.of("email", authentication.getName());
-    } 
+    @PostMapping
+    public TaskResponseDTO create(@RequestBody TaskRequestDTO request) {
+        return taskService.create(request);
+    }
+
+    @GetMapping
+    public List<TaskResponseDTO> findAll() {
+        return taskService.findAll();
+    }
 }
