@@ -5,6 +5,7 @@ import com.caio.api.authcrud.entity.Task;
 import com.caio.api.authcrud.entity.User;
 import com.caio.api.authcrud.exception.ResourceNotFoundException;
 import com.caio.api.authcrud.exception.UnauthorizedTaskAccessException;
+import com.caio.api.authcrud.mapper.TaskMapper;
 import com.caio.api.authcrud.repository.TaskRepository;
 import com.caio.api.authcrud.security.AuthenticatedUserService;
 import com.caio.api.authcrud.service.TaskService;
@@ -18,6 +19,7 @@ public class TaskServiceImpl implements TaskService{
 
     private final TaskRepository taskRepository;
     private final AuthenticatedUserService authenticatedUserService;
+    private final TaskMapper mapper;
 
     @Override
     public TaskResponse create(TaskRequest request) {
@@ -42,7 +44,7 @@ public class TaskServiceImpl implements TaskService{
         return taskRepository
         .findByUser(user)
         .stream()
-        .map(this::convertToResponse)
+        .map(mapper::toResponse)
         .toList();
     }
 
@@ -55,7 +57,7 @@ public class TaskServiceImpl implements TaskService{
 
         validateOwner(task, user);
 
-        return convertToResponse(task);
+        return mapper.toResponse(task);
     }
 
     @Override
@@ -72,7 +74,7 @@ public class TaskServiceImpl implements TaskService{
 
         taskRepository.save(task);
 
-        return convertToResponse(task);
+        return mapper.toResponse(task);
     }
 
     @Override
@@ -98,12 +100,4 @@ public class TaskServiceImpl implements TaskService{
         }
     }
 
-    private TaskResponse convertToResponse(Task task) {
-        return new TaskResponse(
-            task.getId(),
-            task.getTitle(),
-            task.getDescription()
-        );
-    }
-    
 }
