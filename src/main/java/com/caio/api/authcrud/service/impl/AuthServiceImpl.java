@@ -1,8 +1,6 @@
 package com.caio.api.authcrud.service.impl;
 
-import com.caio.api.authcrud.dto.UserRequest;
-import com.caio.api.authcrud.dto.AuthResponseDTO;
-import com.caio.api.authcrud.dto.LoginRequestDTO;
+import com.caio.api.authcrud.dto.auth.*;
 import com.caio.api.authcrud.entity.User;
 import com.caio.api.authcrud.repository.UserRepository;
 import com.caio.api.authcrud.security.JwtService;
@@ -23,18 +21,18 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public void register(UserRequest request) {
+    public void register(RegisterRequest request) {
 
         User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
 
         repository.save(user);
     }
 
     @Override
-    public AuthResponseDTO login(LoginRequestDTO request) {
+    public AuthResponse login(LoginRequest request) {
 
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -45,6 +43,6 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtService.generateToken(request.email());
 
-        return new AuthResponseDTO(token);
+        return new AuthResponse(token);
     }
 }

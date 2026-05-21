@@ -1,11 +1,10 @@
 package com.caio.api.authcrud.controller;
 
-import com.caio.api.authcrud.dto.UserRequest;
-import com.caio.api.authcrud.dto.AuthResponseDTO;
-import com.caio.api.authcrud.dto.LoginRequestDTO;
+import com.caio.api.authcrud.dto.auth.*;
 import com.caio.api.authcrud.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +13,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     
-    private final AuthService service;
+    private final AuthService authService;
 
     @PostMapping("/register")
-    public void register(@RequestBody UserRequest request) {
-        service.register(request);
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest request) {
+        authService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
-        return ResponseEntity.ok(service.login(request));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }

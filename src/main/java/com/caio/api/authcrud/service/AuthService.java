@@ -1,13 +1,11 @@
 package com.caio.api.authcrud.service;
 
-import com.caio.api.authcrud.dto.AuthResponseDTO;
-import com.caio.api.authcrud.dto.LoginRequestDTO;
-import com.caio.api.authcrud.dto.UserRequest;
+import com.caio.api.authcrud.dto.auth.*;
 
 public interface AuthService {
     
-    void register(UserRequest request);
+    void register(RegisterRequest request);
 
-    AuthResponseDTO login(LoginRequestDTO request);
+    AuthResponse login(LoginRequest request);
     
 }
