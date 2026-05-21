@@ -4,11 +4,11 @@ import com.caio.api.authcrud.dto.*;
 import com.caio.api.authcrud.entity.Task;
 import com.caio.api.authcrud.entity.User;
 import com.caio.api.authcrud.exception.ResourceNotFoundException;
-import com.caio.api.authcrud.exception.UnauthorizedTaskAccessException;
 import com.caio.api.authcrud.mapper.TaskMapper;
 import com.caio.api.authcrud.repository.TaskRepository;
 import com.caio.api.authcrud.security.AuthenticatedUserService;
 import com.caio.api.authcrud.service.TaskService;
+import com.caio.api.authcrud.validator.TaskAuthorizationValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -20,6 +20,7 @@ public class TaskServiceImpl implements TaskService{
     private final TaskRepository taskRepository;
     private final AuthenticatedUserService authenticatedUserService;
     private final TaskMapper mapper;
+    private final TaskAuthorizationValidator validator;
 
     @Override
     public TaskResponse create(TaskRequest request) {
@@ -55,7 +56,7 @@ public class TaskServiceImpl implements TaskService{
         Task task = taskRepository.findById(id).orElseThrow(() -> 
         new ResourceNotFoundException("Task not found"));
 
-        validateOwner(task, user);
+        validator.validate(task, user);
 
         return mapper.toResponse(task);
     }
@@ -67,7 +68,7 @@ public class TaskServiceImpl implements TaskService{
         Task task = taskRepository.findById(id).orElseThrow(() -> 
         new ResourceNotFoundException("Task not found"));
 
-        validateOwner(task, user);
+        validator.validate(task, user);
 
         task.setTitle(request.title());
         task.setDescription(request.description());
@@ -85,19 +86,9 @@ public class TaskServiceImpl implements TaskService{
         Task task = taskRepository.findById(id).orElseThrow(() -> 
         new ResourceNotFoundException("Task not found"));
 
-        validateOwner(task, user);
+        validator.validate(task, user);
 
         taskRepository.delete(task);
-    }
-
-
-
-    private void validateOwner(Task task, User user) {
-        
-        if (!task.getUser().getId().equals(user.getId())) {
-            
-            throw new UnauthorizedTaskAccessException("Access denied");
-        }
     }
 
 }
