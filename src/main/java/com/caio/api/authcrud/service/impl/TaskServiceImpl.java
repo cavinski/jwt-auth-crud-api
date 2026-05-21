@@ -6,10 +6,9 @@ import com.caio.api.authcrud.entity.User;
 import com.caio.api.authcrud.exception.ResourceNotFoundException;
 import com.caio.api.authcrud.exception.UnauthorizedTaskAccessException;
 import com.caio.api.authcrud.repository.TaskRepository;
-import com.caio.api.authcrud.repository.UserRepository;
+import com.caio.api.authcrud.security.AuthenticatedUserService;
 import com.caio.api.authcrud.service.TaskService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -18,13 +17,12 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService{
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
+    private final AuthenticatedUserService authenticatedUserService;
 
     @Override
     public TaskResponse create(TaskRequest request) {
 
-        User user = getAuthenticadetUser();
-
+        User user = authenticatedUserService.getAuthenticatedUser();
         Task task = Task.builder()
         .title(request.title())
         .description(request.description())
@@ -39,7 +37,7 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public List<TaskResponse> findAll() {
 
-        User user = getAuthenticadetUser();
+        User user = authenticatedUserService.getAuthenticatedUser();
 
         return taskRepository
         .findByUser(user)
@@ -51,8 +49,7 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public TaskResponse findById(Long id) {
 
-        User user = getAuthenticadetUser();
-
+        User user = authenticatedUserService.getAuthenticatedUser();
         Task task = taskRepository.findById(id).orElseThrow(() -> 
         new ResourceNotFoundException("Task not found"));
 
@@ -64,8 +61,7 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public TaskResponse update(Long id, TaskRequest request) {
 
-        User user = getAuthenticadetUser();
-
+        User user = authenticatedUserService.getAuthenticatedUser();
         Task task = taskRepository.findById(id).orElseThrow(() -> 
         new ResourceNotFoundException("Task not found"));
 
@@ -82,7 +78,7 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public void delete(Long id) {
 
-        User user = getAuthenticadetUser();
+        User user = authenticatedUserService.getAuthenticatedUser();
 
         Task task = taskRepository.findById(id).orElseThrow(() -> 
         new ResourceNotFoundException("Task not found"));
@@ -92,15 +88,7 @@ public class TaskServiceImpl implements TaskService{
         taskRepository.delete(task);
     }
 
-    
 
-    private User getAuthenticadetUser() {
-
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        return userRepository.findByEmail(email).orElseThrow(() -> 
-        new ResourceNotFoundException("user not found"));
-    }
 
     private void validateOwner(Task task, User user) {
         
