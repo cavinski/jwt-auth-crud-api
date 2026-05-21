@@ -5,13 +5,13 @@ import java.util.List;
 
 public interface TaskService {
     
-    TaskResponseDTO create(TaskRequestDTO request);
+    TaskResponse create(TaskRequest request);
 
-    List<TaskResponseDTO> findAll();
+    List<TaskResponse> findAll();
 
-    TaskResponseDTO findById(Long id);
+    TaskResponse findById(Long id);
 
-    TaskResponseDTO update(Long id, TaskRequestDTO request);
+    TaskResponse update(Long id, TaskRequest request);
 
     void delete(Long id);
 }

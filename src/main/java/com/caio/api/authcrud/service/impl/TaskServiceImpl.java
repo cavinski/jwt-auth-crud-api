@@ -21,7 +21,7 @@ public class TaskServiceImpl implements TaskService{
     private final UserRepository userRepository;
 
     @Override
-    public TaskResponseDTO create(TaskRequestDTO request) {
+    public TaskResponse create(TaskRequest request) {
 
         User user = getAuthenticadetUser();
 
@@ -33,11 +33,11 @@ public class TaskServiceImpl implements TaskService{
 
         Task saved = taskRepository.save(task);
 
-        return new TaskResponseDTO(saved.getId(),saved.getTitle(),saved.getDescription());
+        return new TaskResponse(saved.getId(),saved.getTitle(),saved.getDescription());
     }
 
     @Override
-    public List<TaskResponseDTO> findAll() {
+    public List<TaskResponse> findAll() {
 
         User user = getAuthenticadetUser();
 
@@ -49,7 +49,7 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public TaskResponseDTO findById(Long id) {
+    public TaskResponse findById(Long id) {
 
         User user = getAuthenticadetUser();
 
@@ -62,7 +62,7 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public TaskResponseDTO update(Long id, TaskRequestDTO request) {
+    public TaskResponse update(Long id, TaskRequest request) {
 
         User user = getAuthenticadetUser();
 
@@ -110,8 +110,8 @@ public class TaskServiceImpl implements TaskService{
         }
     }
 
-    private TaskResponseDTO convertToResponse(Task task) {
-        return new TaskResponseDTO(
+    private TaskResponse convertToResponse(Task task) {
+        return new TaskResponse(
             task.getId(),
             task.getTitle(),
             task.getDescription()

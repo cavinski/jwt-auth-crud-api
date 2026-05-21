@@ -2,6 +2,8 @@ package com.caio.api.authcrud.controller;
 
 import com.caio.api.authcrud.dto.*;
 import com.caio.api.authcrud.service.TaskService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +17,22 @@ public class TaskController {
     private final TaskService taskService;
     
     @PostMapping
-    public TaskResponseDTO create(@RequestBody TaskRequestDTO request) {
+    public TaskResponse create(@Valid @RequestBody TaskRequest request) {
         return taskService.create(request);
     }
 
     @GetMapping
-    public List<TaskResponseDTO> findAll() {
+    public List<TaskResponse> findAll() {
         return taskService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskResponseDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<TaskResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskResponseDTO> update(@PathVariable Long id, @RequestBody TaskRequestDTO request) {
+    public ResponseEntity<TaskResponse> update(@PathVariable Long id,@Valid @RequestBody TaskRequest request) {
         return ResponseEntity.ok(taskService.update(id, request));
     }
 
