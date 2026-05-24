@@ -6,6 +6,14 @@
 
 <hr>
 
+<p *ngIf="success">
+    {{success}}
+</p>
+
+<p *ngIf="error">
+    {{error}}
+</p>
+
 <div>
     <input placeholder="Title" [(ngModel)]="title" />
 </div>
@@ -14,12 +22,24 @@
     <input placeholder="Description" [(ngModel)]="description" />
 </div>
 
-<button *ngIf="!editing" (click)="createTask()">
-    Add Task
+<button *ngIf="!editing" (click)="createTask()" [disabled]="loading">
+    {{
+        loading
+
+        ? 'Loading...'
+
+        : 'Add Task'
+    }}
 </button>
 
-<button *ngIf="editing" (click)="updateTask()">
-    Update Task
+<button *ngIf="editing" (click)="updateTask()" [disabled]="loading">
+    {{
+        loading
+
+        ? 'Loading...'
+
+        : 'Update Task'
+    }}
 </button>
 
 <button *ngIf="editing" (click)="cancelEdit()">
@@ -27,6 +47,10 @@
 </button>
 
 <hr>
+
+<div *ngIf="tasks.length === 0">
+    No task found
+</div>
 
 <div *ngFor="let task of tasks">
     <h3>{{ task.title }}</h3>

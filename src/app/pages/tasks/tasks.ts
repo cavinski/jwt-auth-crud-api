@@ -18,6 +18,9 @@ export class Tasks {
   description = '';
   editing = false;
   edigitingId = 0;
+  loading = false;
+  success = '';
+  error = '';
 
   constructor(
     private auth: AuthService,
@@ -33,20 +36,30 @@ export class Tasks {
     this.service.getTasks().subscribe({
       next: (response => {
         this.tasks = response;
-      })
+      }),
+      error: () => {
+        this.error = 'Failed to load tasks';
+      }
     });
   }
 
   createTask() {
+    this.loading = true;
+    this.clearMessages();
+
     this.service.createTask({
       title: this.title,
       description: this.description
     }).subscribe({
 
       next: () => {
-        this.title = '';
-        this.description = '';
-        this.loadTasks(); 
+        this.success = 'Task created';
+        this.clearForm();
+        this.loadTasks();
+      }, error: () => {
+        this.loading = false;
+      }, complete: () => {
+        this.loading = false;
       }
     });
   }
@@ -59,6 +72,9 @@ export class Tasks {
   }
 
   updateTask() {
+    this.loading = true;
+    this.clearMessages();
+
     this.service.updateTask(
       this.edigitingId,
       {
@@ -67,10 +83,20 @@ export class Tasks {
       }
     ).subscribe({
       next: () => {
+        this.success = 'Task updated';
         this.clearForm();
         this.loadTasks();
+      }, error: () => {
+        this.error = 'Update failed';
+      }, complete: () => {
+        this.loading = false;
       }
     });
+  }
+
+  clearMessages() {
+    this.success = '';
+    this.error = '';
   }
 
   cancelEdit() {
@@ -85,12 +111,18 @@ export class Tasks {
   }
 
   deleteTask(id: number) {
+    this.loading = true;
+    this.clearMessages();
+
     this.service.deleteTask(id).subscribe({
       next: () => {
-        this.tasks = this.tasks.filter(task => task.id !== id);
+        this.success = 'Task deleted';
+        this.loadTasks();
       }, 
       error: (err) => {
-        console.log(err);
+        this.error = 'Delete failed';
+      }, complete: () => {
+        this.loading = false;
       }
     })
   }
