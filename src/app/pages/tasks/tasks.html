@@ -14,8 +14,16 @@
     <input placeholder="Description" [(ngModel)]="description" />
 </div>
 
-<button (click)="createTask()">
+<button *ngIf="!editing" (click)="createTask()">
     Add Task
+</button>
+
+<button *ngIf="editing" (click)="updateTask()">
+    Update Task
+</button>
+
+<button *ngIf="editing" (click)="cancelEdit()">
+    Cancel
 </button>
 
 <hr>
@@ -23,6 +31,7 @@
 <div *ngFor="let task of tasks">
     <h3>{{ task.title }}</h3>
     <p>{{ task.description }}</p>
+    <button (click)="editTask(task)">Edit</button>
     <button (click)="deleteTask(task.id)">Delete</button>
     <hr>
 </div>

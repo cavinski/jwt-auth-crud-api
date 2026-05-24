@@ -16,6 +16,8 @@ export class Tasks {
   tasks: any[] = [];
   title = '';
   description = '';
+  editing = false;
+  edigitingId = 0;
 
   constructor(
     private auth: AuthService,
@@ -47,6 +49,39 @@ export class Tasks {
         this.loadTasks(); 
       }
     });
+  }
+
+  editTask(task: any) {
+    this.editing = true;
+    this.edigitingId = task.id;
+    this.title = task.title;
+    this.description = task.description;
+  }
+
+  updateTask() {
+    this.service.updateTask(
+      this.edigitingId,
+      {
+        title: this.title,
+        description: this.description
+      }
+    ).subscribe({
+      next: () => {
+        this.clearForm();
+        this.loadTasks();
+      }
+    });
+  }
+
+  cancelEdit() {
+    this.clearForm();
+  }
+
+  clearForm() {
+    this.editing = false;
+    this.edigitingId = 0;
+    this.title = '';
+    this.description = '';
   }
 
   deleteTask(id: number) {

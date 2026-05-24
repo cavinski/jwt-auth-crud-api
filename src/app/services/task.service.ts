@@ -22,6 +22,10 @@ export class TaskService {
     return this.http.post(this.api, task);
   }
 
+  updateTask(id: number, task: any) {
+    return this.http.put(`${this.api}/${id}`, task);
+  }
+
   deleteTask(id: number) {
     return this.http.delete(`${this.api}/${id}`);
   }
