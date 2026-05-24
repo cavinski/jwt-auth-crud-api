@@ -9,7 +9,7 @@ export class AuthService {
 
   private http = inject(HttpClient);
 
-  private api = 'http/localhost:8080/auth';
+  private api = 'http://localhost:8080/auth';
 
   register(data:any) {
     return this.http.post(`${this.api}/register`, data);
