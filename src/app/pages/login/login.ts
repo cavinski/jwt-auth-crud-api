@@ -13,6 +13,7 @@ export class Login {
 
   email = '';
   password = '';
+  errorMessage = '';
 
   constructor(
     private auth: AuthService,
@@ -29,12 +30,17 @@ export class Login {
     this.auth.login(data).subscribe({
       
       next: (response) => {
-        
-        this.auth.saveToken(response.token);
 
+        this.errorMessage = '';
+        this.auth.saveToken(response.token);
         this.router.navigate(['/tasks']);
 
+      }, 
+
+      error: () => {
+        this.errorMessage = 'Invalid credentials';
       }
+
     });
 
   }
