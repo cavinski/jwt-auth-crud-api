@@ -3,9 +3,9 @@ spring:
     name: auth-crud-api
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/api_db
-    username: api_user
-    password: api_pass
+    url: jdbc:postgresql://postgres:5432/api_db
+    username: postgres
+    password: postgres
 
   jpa:
     hibernate:
