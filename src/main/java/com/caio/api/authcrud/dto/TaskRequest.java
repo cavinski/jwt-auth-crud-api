@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record TaskRequest(
 
-    @NotBlank
+    @NotBlank(message = "Title is required")
     String title, 
 
     @NotBlank

@@ -2,9 +2,10 @@ package com.caio.api.authcrud.controller;
 
 import com.caio.api.authcrud.dto.*;
 import com.caio.api.authcrud.service.TaskService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -17,8 +18,8 @@ public class TaskController {
     private final TaskService taskService;
     
     @PostMapping
-    public TaskResponse create(@Valid @RequestBody TaskRequest request) {
-        return taskService.create(request);
+    public ResponseEntity<TaskResponse> create(@Valid @RequestBody TaskRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(request));
     }
 
     @GetMapping
