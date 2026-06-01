@@ -1,5 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -7,16 +9,18 @@ import { HttpClient } from '@angular/common/http';
 
 export class AuthService {
 
-  private http = inject(HttpClient);
+  constructor(
+    private http: HttpClient
+  ) {}
 
-  private api = 'http://localhost:8080/auth';
+  private api = environment.apiUrl;
 
-  register(data:any) {
-    return this.http.post(`${this.api}/register`, data);
+  register(data:any): Observable<any> {
+    return this.http.post(`${this.api}/auth/register`, data);
   }
 
-  login(data:any) {
-    return this.http.post<any>(`${this.api}/login`, data);
+  login(data:any): Observable<any> {
+    return this.http.post<any>(`${this.api}/auth/login`, data);
   }
 
   saveToken(token: string) {
